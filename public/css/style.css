@@ -452,7 +452,7 @@ img.img-center {
 .testimonial-area {
     padding: 0 0 0 0;
     margin: 0;
-    background: url('/public/img/slides/reviews.jpg') center  ;
+    background: url('img/slides/reviews.jpg') center  ;
     background-size: cover;
     -webkit-background-size: cover;
     -moz-background-size: cover;
