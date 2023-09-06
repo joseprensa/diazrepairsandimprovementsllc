@@ -828,7 +828,7 @@ ul.portfolio-categ li a:active {
 }
 .panel-group .panel {
     margin-bottom: 0;
-    border-radius: 2px;
+    border-radius: 6px;
 }
 .panel {
     margin-bottom: 18px;
@@ -946,6 +946,10 @@ blockquote cite a:visited {
     padding-right: 20px;
 }
 /* --- button --- */
+
+.button {
+    border-radius: 10px;
+}
 
 .btn {
     text-align: center;

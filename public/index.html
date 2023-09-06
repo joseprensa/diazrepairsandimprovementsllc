@@ -14,6 +14,7 @@
     <link href="css/flexslider.css" rel="stylesheet">
     <link href="js/owl-carousel/owl.carousel.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="js/hideul.js">
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -133,8 +134,10 @@
                                 "font-style: italic"></span>
 
                                 <div class="box-area">
-                                 <h3>Interior</h3>
-                                    
+                                  <button class="button" onclick="toggle(this, 'myul')"><h3>Interior</h3></button>
+                                 
+                                    <ul id="myul" hidden>
+                                      <li>
                                     <div class="panel-group" id="accordion-alt3">
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                         <h4>Kitchen Remodel:</h4>
@@ -181,8 +184,9 @@
                                             </div>
                                          </div>
                                     </div>
+                                      </li>
                                        <!-- Accordion ends -->
-                                    
+                                      <li>
                                     <div class="panel-group" id="accordion-alt3">
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                         <h4>Bathroom repairs:</h4>
@@ -228,8 +232,9 @@
                                             </div>
                                          </div>
                                     </div>
+                                      </li>
                                        <!-- Accordion ends -->
-                                    
+                                      <li>
                                     <div class="panel-group" id="accordion-alt3">
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                         <h4>Paint and Interior Finishes:</h4>
@@ -275,10 +280,26 @@
                                             </div>
                                          </div>
                                     </div>
+                                      </li>
                                        <!-- Accordion ends -->
+                                    </ul>
 
                                     <p>Our dedication to interior transformation creates welcoming and functional spaces that reflect our clients' unique vision and style. From kitchen remodels to bathroom repairs, our team of experts strives to enhance the beauty of interior spaces.</p>
-                                </div> 
+                                </div>
+                                <script>
+                                  let toggle = (button, elementId) => {
+                                      let element = document.getElementById(elementId);
+                                      let hidden = element.getAttribute("hidden");
+                              
+                                      if (hidden) {
+                                          element.removeAttribute("hidden");
+                                          
+                                      } else {
+                                          element.setAttribute("hidden", "hidden");
+                                          
+                                      }
+                                  }
+                              </script> 
                             </div>
 
                             <div class="col-md-3 text-center">
@@ -286,9 +307,12 @@
                                 "font-style: italic"></span>
 
                                 <div class="box-area">
-                                    <h3>Exterior</h3>
-                                    <h4>Facade Renovation:</h4>
+                                    
+                                    <button class="button" onclick="toggle(this, 'myul2')"><h3>Exterior</h3></button>
+                                    <ul id="myul2" hidden>
+                                    <li>
                                     <div class="panel-group" id="accordion-alt3">
+                                      <h4>Facade Renovation:</h4>
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                          <div class="panel">	
                                            <!-- Panel heading -->
@@ -332,9 +356,10 @@
                                             </div>
                                          </div>
                                     </div>
-                                       <!-- Accordion ends -->
-
-                                       <div class="panel-group" id="accordion-alt3">
+                                    </li>
+                                      <!-- Accordion ends -->
+                                    <li>
+                                    <div class="panel-group" id="accordion-alt3">
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                         <h4>Outdoor Spaces:</h4>
                                         <div class="panel">	
@@ -378,10 +403,11 @@
                                                 We design multifunctional areas for outdoor gatherings, from grills to seating areas.                                               </div>
                                             </div>
                                          </div>
-                                       </div>
-                                       <!-- Accordion ends -->
-
-                                        <div class="panel-group" id="accordion-alt3">
+                                    </div>
+                                    </li>
+                                      <!-- Accordion ends -->
+                                    <li>
+                                    <div class="panel-group" id="accordion-alt3">
                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                         <h4>Roof and Gutter Repair:</h4>
                                         <div class="panel">	
@@ -425,10 +451,11 @@
                                                 We reroof with durable and aesthetically pleasing materials to protect your property.                                               </div>
                                             </div>
                                          </div>
-                                       </div>
-                                       <!-- Accordion ends -->
-
-                                       
+                                    </div>
+                                    </li>
+                                      <!-- Accordion ends -->
+                                    </ul>
+                                      
 
                                     <p>Our exterior services transform the appearance and functionality of your property, creating an attractive and enduring exterior environment that reflects your lifestyle.</p>
                                 </div>
@@ -439,7 +466,10 @@
                                                 "font-style: italic"></span>
                 
                                 <div class="box-area">
-                                                    <h3>Maintenance</h3>
+                                                    
+                                                    <button class="button" onclick="toggle(this, 'myul3')"><h3>Maintenance</h3></button>
+                                                    <ul id="myul3" hidden>
+                                                    <li>
                                                     <div class="panel-group" id="accordion-alt3">
                                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                                         <h4>Plumbing Services:</h4>
@@ -485,9 +515,10 @@
                                                             </div>
                                                          </div>
                                                     </div>
+                                                    </li>
                                                        <!-- Accordion ends -->
-                
-                                                        <div class="panel-group" id="accordion-alt3">
+                                                    <li>
+                                                    <div class="panel-group" id="accordion-alt3">
                                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                                         <h4>Electrical Services:</h4>
                                                         <div class="panel">	
@@ -531,10 +562,11 @@
                                                                 We guarantee that your electrical systems comply with the standards and work efficiently.                                                               </div>
                                                             </div>
                                                          </div>
-                                                        </div>
+                                                    </div>
+                                                    </li>
                                                        <!-- Accordion ends -->
-                
-                                                       <div class="panel-group" id="accordion-alt3">
+                                                    <li>
+                                                    <div class="panel-group" id="accordion-alt3">
                                                         <!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
                                                         <h4>Inspection and General Maintenance:</h4>
                                                         <div class="panel">	
@@ -578,9 +610,10 @@
                                                                 We provide quick responses to solve unforeseen problems and ensure the continuity of your operations.                                                               </div>
                                                             </div>
                                                          </div>
-                                                       </div>
+                                                    </div>
+                                                    </li>
                                                        <!-- Accordion ends -->
-                
+                                                    </ul>
                                                     <p>Our maintenance services provide peace of mind by making sure your property is in top condition and running smoothly.</p>
                                 </div> 
                             </div>  
