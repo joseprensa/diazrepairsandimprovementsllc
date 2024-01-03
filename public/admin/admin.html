@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Interface</title>
+  <!-- Add Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+  </style>
+</head>
+<body>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6">
+          <canvas id="barChart" width="400" height="200"></canvas>
+        </div>
+        <div class="col-md-6">
+          <canvas id="lineChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+      <br /> <br />
+
+        <h2 class="mb-4">Appointments</h2>
+        <label>Filter with Date: </label>
+        <input type="date" id="filter-date">
+        <button onclick="filterAppointments()" >Filter</button>
+        <br /><br />
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Address</th>
+                <th>Message</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="appointments-body">
+              <!-- Appointments will be dynamically added here -->
+            </tbody>
+          </table>
+        </div>
+        <button onclick="logout()" class="btn btn-danger">Logout</button>
+  </div>
+  <br /><br />
+
+  <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-analytics.js"></script>
+    
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDPB2oi0Zp3ug1HRplWiPYMMkoU9-QSx5c",
+        authDomain: "diazrepairsandimprovemen-357cf.firebaseapp.com",
+        databaseURL: "https://diazrepairsandimprovemen-357cf-default-rtdb.firebaseio.com",
+        projectId: "diazrepairsandimprovemen-357cf",
+        storageBucket: "diazrepairsandimprovemen-357cf.appspot.com",
+        messagingSenderId: "1039432429120",
+        appId: "1:1039432429120:web:cbf827886d4a1d4fd3f9a5",
+        measurementId: "G-JVZ6E6W055"
+    };
+      // Initialize Firebases
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+  </script>
+<script>
+
+    // Function to check if the user is authenticated
+    function checkAuthentication() {
+      var isLoggedIn = sessionStorage.getItem('isLoggedIn');
+
+      if (!isLoggedIn) {
+        // If user is not authenticated, redirect to login page
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Call the function to check authentication on page load
+    checkAuthentication();
+
+    function logout() {
+      // Clear the session variable to indicate the user is logged out
+      sessionStorage.removeItem('isLoggedIn');
+      // Redirect to login page
+      window.location.href = 'login.html';
+    }
+    // Function to display appointments in the admin interface
+    function displayAppointments() {
+    var appointmentsRef = firebase.database().ref('Request');
+
+    appointmentsRef.on('value', function(snapshot) {
+        var appointments = snapshot.val();
+
+        createBarChart(appointments);
+        createLineChart(appointments);
+
+
+        var appointmentsTable = document.getElementById('appointments-body');
+        appointmentsTable.innerHTML = "";
+
+        for (var key in appointments) {
+            if (appointments.hasOwnProperty(key)) {
+                var appointment = appointments[key];
+                var row = "<tr>" +
+                          "<td>" + appointment.Name + "</td>" +
+                          "<td>" + appointment.Email + "</td>" +
+                          "<td>" + appointment.Phone + "</td>" +
+                          "<td>" + appointment.Date + "</td>" +
+                          "<td>" + appointment.Address + "</td>" +
+                          "<td>" + appointment.Message + "</td>" +
+                          "<td><button onclick='deleteAppointment(\"" + key + "\')' class='btn btn-danger btn-sm'>Delete</button></td>" +
+                          "</tr>";
+                appointmentsTable.innerHTML += row;
+            }
+        }
+    });
+}
+
+// Function to filter appointments based on the selected date
+function filterAppointments() {
+    var filterDate = document.getElementById('filter-date').value;
+    var appointmentsRef = firebase.database().ref('Request');
+
+    appointmentsRef.orderByChild('Date').equalTo(filterDate).on('value', function(snapshot) {
+        var filteredAppointments = snapshot.val();
+        var appointmentsTable = document.getElementById('appointments-body');
+        appointmentsTable.innerHTML = "";
+
+        for (var key in filteredAppointments) {
+            if (filteredAppointments.hasOwnProperty(key)) {
+                var appointment = filteredAppointments[key];
+                var row = "<tr>" +
+                          "<td>" + appointment.Name + "</td>" +
+                          "<td>" + appointment.Email + "</td>" +
+                          "<td>" + appointment.Phone + "</td>" +
+                          "<td>" + appointment.Date + "</td>" +
+                          "<td>" + appointment.Address + "</td>" +
+                          "<td>" + appointment.Message + "</td>" +
+                          "<td><button onclick='deleteAppointment(\"" + key + "\")' class='btn btn-danger btn-sm'>Delete</button></td>" +
+                          "</tr>";
+                appointmentsTable.innerHTML += row;
+            }
+        }
+    });
+}
+
+  // Function to delete an appointment
+  function deleteAppointment(key) {
+    var appointmentRef = firebase.database().ref('Request').child(key);
+    appointmentRef.remove()
+      .then(function() {
+        // Refresh the appointments table after deletion
+        displayAppointments();
+      })
+      .catch(function(error) {
+        console.error("Error deleting appointment:", error);
+      });
+  }
+  function createBarChart(appointmentData) {
+    var days = [];
+    var counts = [];
+
+    for (var key in appointmentData) {
+        if (appointmentData.hasOwnProperty(key)) {
+            var appointment = appointmentData[key];
+            var appointmentDate = new Date(appointment.Date);
+            var day = appointmentDate.toLocaleDateString('en-US', { weekday: 'long' });
+
+            if (days.indexOf(day) === -1) {
+                days.push(day);
+                counts.push(1);
+            } else {
+                var index = days.indexOf(day);
+                counts[index]++;
+            }
+        }
+    }
+
+    var barChartCanvas = document.getElementById('barChart').getContext('2d');
+    new Chart(barChartCanvas, {
+        type: 'bar',
+        data: {
+            labels: days,
+            datasets: [{
+                label: 'Appointments per Day',
+                data: counts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Function to create a line chart
+function createLineChart(appointmentData) {
+    var dates = [];
+    var counts = [];
+    var dateCounts = {};
+
+    for (var key in appointmentData) {
+        if (appointmentData.hasOwnProperty(key)) {
+            var appointment = appointmentData[key];
+            var appointmentDate = new Date(appointment.Date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            
+            if (dateCounts[appointmentDate] === undefined) {
+                dateCounts[appointmentDate] = 1;
+            } else {
+                dateCounts[appointmentDate]++;
+            }
+        }
+    }
+
+    for (var date in dateCounts) {
+        dates.push(date);
+        counts.push(dateCounts[date]);
+    }
+
+    var lineChartCanvas = document.getElementById('lineChart').getContext('2d');
+    new Chart(lineChartCanvas, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [{
+                label: 'Appointments per Day',
+                data: counts,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+
+  // Call the function to display appointments on page load
+  displayAppointments();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+
+</body>
+</html>
